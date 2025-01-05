@@ -75,6 +75,17 @@ def visualize(results):
     vis_scatter(results, "samplesPerNode", np.arange(1, 10, 1))
     vis_scatter(results, "scale", np.arange(0.9, 1.8, 0.1))
     
+    sum_e = 0
+    for result in results:
+        gt = result['gt']
+        pred = result['pred']
+        e = 0
+        for key in ["depth", "cgDepth", "fullDepth", "iters", "pointWeight", "samplesPerNode", "scale"]:
+            e += abs(gt[key] - pred[key]) * abs(gt[key] - pred[key])
+        sum_e += e / 7
+    sum_e /= len(results)
+    print("Average MSE = " + str(sum_e))
+    
 
 if __name__ == "__main__":
     with open('all_results.json', 'r') as openfile:
